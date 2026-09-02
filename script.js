@@ -12,54 +12,48 @@ const ddd = document.querySelector("#ddd");
 // TODO 1: complete a função para devolver apenas os números.
 
 function deixarSomenteNumeros(valor) {
-
+    let cep = valor.replace(/\D/g, "");  // Use replace e expressão regular para remover tudo que não for número.
+    return cep;
+}
 // Pista: replace e expressão regular.
 
-}
-
-
 // TODO 2: construa a máscara 00000-000.
-
 function formatarCep(valor) {
-
-// Limpe o valor, limite a 8 números e decida quando inserir o hífen.
-
+    // Limpe o valor, limite a 8 números e decida quando inserir o hífen.
+    let cep = deixarSomenteNumeros(valor);
+    if (cep.length === 8) {
+        cep = cep.slice(0, 5) + "-" + cep.slice(5);
+    }
+    return cep;
 }
-
 
 // TODO 3: mostre uma mensagem e aplique a classe recebida em tipo.
-
 function mostrarStatus(mensagem, tipo = "") {
-
-// Atualize textContent, restaure a classe status e trate o tipo.
-
+    status.textContent = mensagem;
+    status.classList.remove("alert-success", "alert-danger");  // Atualize textContent, restaure a classe status e trate o tipo.(VERIFICAR)
+    if (tipo) {
+        status.classList.add(`alert-${tipo}`);
+    }
 }
-
 
 // TODO 4: controle o estado e o texto do botão.
 
 function alterarCarregamento(estaCarregando) {
-
-// Durante a espera: botão desabilitado e texto "Buscando...".
-
-// Depois da espera: botão habilitado e texto "Buscar CEP".
-
+    botaoBuscar.disabled = estaCarregando;  // Durante a espera: botão desabilitado e texto "Buscando...".
+    botaoBuscar.textContent = estaCarregando ? "Buscando..." : "Buscar CEP";  // Depois da espera: botão habilitado e texto "Buscar CEP".
 }
-
 
 // TODO 5: esconda o card de resultado.
 
 function esconderResultado() {
-
-// Use a classe CSS oculto.
-
+    resultado.classList.add("oculto");  // Use a classe CSS oculto.
 }
 
 
 // TODO 6: leve os dados da API para os cinco campos e revele o card.
 
 function preencherResultado(dados) {
-
+    resultado.classList.remove("oculto");  // Revele o card de resultado.
 // Propriedades: cep, logradouro, bairro, localidade, uf e ddd.
 
 // Use "Não informado" quando um campo vier vazio.
