@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca CEP</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <section class="card">
+            <p class="etiqueta">API ViaCEP</p>
+            <h1>Busque um endereço pelo CEP</h1>
+            <p class="descricao">Digite um CEP brasileiro para consultar o endereço.</p>
+            <form id="form-cep" novalidate>
+                <label for="cep">CEP</label>
+                <div class="grupo-busca">
+                    <input type="text" 
+                        id="cep" 
+                        name="cep"
+                        inputmode="numeric"
+                        maxlength="9"
+                        autocomplete="postal-code"
+                        placeholder="00000-000"
+                        aria-describedby="ajuda-cep status"
+                    >              
+                    <button id="botao-buscar" type="submit"> Buscar CEP </button>
+                </div>
+                <small id="ajuda-cep"> Informe os 8 números do CEP. </small>
+            </form>
+
+            <p id="status" class="status" role="status" aria-live="polite"></p>
+            <section id="resultado" class="resultado oculto" aria-labelledby="titulo-resultado">
+                <h2 id="titulo-resultado">Endereço encontrado</h2>
+
+                <div class="campo">
+                    <span>CEP</span>
+                    <strong id="resultado-cep">-</strong>
+                </div>
+
+                <div class="campo">
+                    <span>Logradouro</span>
+                    <strong id="logradouro">-</strong>
+                </div>
+
+                <div class="campo">
+                    <span>Bairro</span>
+                    <strong id="bairro">-</strong>
+                </div>
+
+                <div class="campo">
+                    <span>Cidade/UF</span>
+                    <strong id="cidade-uf">-</strong>
+                </div>
+
+                <div class="campo">
+                    <span>DDD</span>
+                    <strong id="ddd">-</strong>
+                </div>
+            </section>
+        </section>
+    </main>
+</body>
+</html
