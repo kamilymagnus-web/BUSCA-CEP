@@ -16,7 +16,7 @@ function deixarSomenteNumeros(valor) {
 
 // TODO 2: construa a máscara 00000-000.
 function formatarCep(valor) {  // Limpe o valor, limite a 8 números e decida quando inserir o hífen.
-    let cep = deixarSomenteNumeros(valor);
+    let cep = deixarSomenteNumeros(valor). slice(0, 8);  // Limite a 8 números.
     if (cep.length > 5) {
         cep = cep.slice(0, 5) + "-" + cep.slice(5);
     }
