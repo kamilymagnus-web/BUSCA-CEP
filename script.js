@@ -9,19 +9,15 @@ const bairro = document.querySelector("#bairro");
 const cidadeUf = document.querySelector("#cidade-uf");
 const ddd = document.querySelector("#ddd");
 
-// TODO 1: complete a função para devolver apenas os números.
-
 function deixarSomenteNumeros(valor) {
-    let cep = valor.replace(/\D/g, "");  // Use replace e expressão regular para remover tudo que não for número.
+    let cep = valor.replace(/\D/g, "");  // Use replace e expressão regular para remover tudo que não for número. (correto)
     return cep;
 }
-// Pista: replace e expressão regular.
 
 // TODO 2: construa a máscara 00000-000.
-function formatarCep(valor) {
-    // Limpe o valor, limite a 8 números e decida quando inserir o hífen.
+function formatarCep(valor) {  // Limpe o valor, limite a 8 números e decida quando inserir o hífen.
     let cep = deixarSomenteNumeros(valor);
-    if (cep.length === 8) {
+    if (cep.length > 5) {
         cep = cep.slice(0, 5) + "-" + cep.slice(5);
     }
     return cep;
@@ -55,32 +51,49 @@ function esconderResultado() {
 function preencherResultado(dados) {
     resultado.classList.remove("oculto");  // Revele o card de resultado.
 // Propriedades: cep, logradouro, bairro, localidade, uf e ddd.
-
 // Use "Não informado" quando um campo vier vazio.
-
+    resultadoCep.textContent = dados.cep || "Não informado";
+    logradouro.textContent = dados.logradouro || "Não informado";
+    bairro.textContent = dados.bairro || "Não informado";
+    cidadeUf.textContent = `${dados.localidade || "Não informado"} - ${dados.uf || "Não informado"}`;
+    ddd.textContent = dados.ddd || "Não informado";
 }
 
 
 // TODO 7: transforme buscarCep em uma função assíncrona e impeça o submit.
 
-function buscarCep(evento) {
-
+// Impede o submit padrão do formulário.
 // TODO 8: leia, limpe e valide o CEP. Também limpe a interface antiga.
-
-
 // TODO 9: ative o carregamento e informe que a consulta começou.
-
-
 // TODO 10: crie o try com fetch, verificação HTTP, conversão do JSON,
-
 // verificação de CEP inexistente e exibição do resultado.
-
-
 // TODO 11: escreva o catch e o finally.
 
+botaoBuscar.addEventListener(
+    "click", 
+    buscarCep
+);
+
+async function buscarCep() {
+    const cep = document.getElementById("cep").value;
+    }
+
+    resultado.textContent = "Buscando CEP...";
+    
+
+
+
+inputCep.addEventListener("input", () => {
+    inputCep.value = formatarCep(inputCep.value);  // Formate o valor digitado.
+});
+
+function validarCep(cep) {
+    if (cep.length !== 8) {
+        mostrarStatus("CEP inválido. Deve conter 8 números.", "danger");
+        esconderResultado();
+        return false;
+    }
+    return true;
 }
-
-
 // TODO 12: crie os eventos input e submit.
-
 // No input, formate o valor digitado. No submit, execute buscarCep.
