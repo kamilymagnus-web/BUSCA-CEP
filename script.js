@@ -27,7 +27,7 @@ function mostrarStatus(mensagem, tipo = "") {
     status.textContent = mensagem;
     status.className = "status";  
     if (tipo) {
-        status.classList.add(`alert-${tipo}`);
+        status.classList.add(tipo);
     }
 }
 
@@ -62,7 +62,7 @@ async function buscarCep(evento) {
     
     const ceplimpo = deixarSomenteNumeros(inputCep.value);
     if (ceplimpo.length !== 8) {
-        mostrarStatus ("CEP inválido. Deve conter 8 números.", "danger");  // TODO 8: leia, limpe e valide o CEP. Também limpe a interface antiga.
+        mostrarStatus ("CEP inválido. Deve conter 8 números.", "erro");  // TODO 8: leia, limpe e valide o CEP. Também limpe a interface antiga.
         inputCep.focus();
         return;
     }
@@ -78,14 +78,14 @@ async function buscarCep(evento) {
             throw new Error("CEP não encontrado.");
         }
         preencherResultado(dados);
-        mostrarStatus("CEP encontrado com sucesso!", "success");
+        mostrarStatus("CEP encontrado com sucesso!", "sucesso");
     }   
     
     catch (erro) {
         if (erro instanceof TypeError) {
-            mostrarStatus("Erro de rede. Verifique sua conexão.", "danger");
+            mostrarStatus("Erro de rede. Verifique sua conexão.", "erro");
         } else {
-            mostrarStatus(erro.message, "danger");  
+            mostrarStatus(erro.message, "erro");  
         }
     }
     finally {
