@@ -82,10 +82,14 @@ async function buscarCep(evento) {
     }   
     
     catch (erro) {
-        mostrarStatus( "erro de conexão, verifique sua internet","danger");  // TODO 11: escreva o catch e o finally.
+        if (erro instanceof TypeError) {
+            mostrarStatus("Erro de rede. Verifique sua conexão.", "danger");
+        } else {
+            mostrarStatus(erro.message, "danger");  
+        }
     }
     finally {
-        alterarCarregamento(false);
+        alterarCarregamento(false); // TODO 11: escreva o catch e o finally.
     } 
 }
 
