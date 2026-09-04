@@ -14,11 +14,10 @@ function deixarSomenteNumeros(valor) {
     return cep;
 }
 
-// TODO 2: construa a máscara 00000-000.
-function formatarCep(valor) {  // Limpe o valor, limite a 8 números e decida quando inserir o hífen.
-    let cep = deixarSomenteNumeros(valor); //.slice(0,8) // Limite a 8 números.
+function formatarCep(valor) { 
+    let cep = deixarSomenteNumeros(valor).slice(0,8); // slice
     if (cep.length > 5) {
-        cep = cep.slice(0, 5) + "-" + cep.slice(5);
+        cep = `${cep.slice(0, 5)}-${cep.slice(5)}`;  // template string 
     }
     return cep;
 }
@@ -26,32 +25,30 @@ function formatarCep(valor) {  // Limpe o valor, limite a 8 números e decida qu
 // TODO 3: mostre uma mensagem e aplique a classe recebida em tipo.
 function mostrarStatus(mensagem, tipo = "") {
     status.textContent = mensagem;
-    status.classList.remove("alert-success", "alert-danger");  // Atualize textContent, restaure a classe status e trate o tipo.(VERIFICAR)
+    status.className = "status";  
     if (tipo) {
         status.classList.add(`alert-${tipo}`);
     }
 }
 
 // TODO 4: controle o estado e o texto do botão.
-
 function alterarCarregamento(estaCarregando) {
-    botaoBuscar.disabled = estaCarregando;  // Durante a espera: botão desabilitado e texto "Buscando...".
-    botaoBuscar.textContent = estaCarregando ? "Buscando..." : "Buscar CEP";  // Depois da espera: botão habilitado e texto "Buscar CEP".
+    botaoBuscar.disabled = estaCarregando; 
+    if (estaCarregando) {
+        botaoBuscar.textContent = "Buscando...";
+    } else {
+        botaoBuscar.textContent = "Buscar CEP";
+    }
 }
 
 // TODO 5: esconda o card de resultado.
-
 function esconderResultado() {
-    resultado.classList.add("oculto");  // Use a classe CSS oculto.
+    resultado.classList.add("oculto");  
 }
 
-
 // TODO 6: leve os dados da API para os cinco campos e revele o card.
-
 function preencherResultado(dados) {
-    resultado.classList.remove("oculto");  // Revele o card de resultado.
-// Propriedades: cep, logradouro, bairro, localidade, uf e ddd.
-// Use "Não informado" quando um campo vier vazio.
+    resultado.classList.remove("oculto");  
     resultadoCep.textContent = dados.cep || "Não informado";
     logradouro.textContent = dados.logradouro || "Não informado";
     bairro.textContent = dados.bairro || "Não informado";
@@ -59,41 +56,47 @@ function preencherResultado(dados) {
     ddd.textContent = dados.ddd || "Não informado";
 }
 
-
 // TODO 7: transforme buscarCep em uma função assíncrona e impeça o submit.
-
-// Impede o submit padrão do formulário.
-// TODO 8: leia, limpe e valide o CEP. Também limpe a interface antiga.
-// TODO 9: ative o carregamento e informe que a consulta começou.
-// TODO 10: crie o try com fetch, verificação HTTP, conversão do JSON,
-// verificação de CEP inexistente e exibição do resultado.
-// TODO 11: escreva o catch e o finally.
-
-botaoBuscar.addEventListener(
-    "click", 
-    buscarCep
-);
-
-async function buscarCep() {
-    const cep = document.getElementById("cep").value;
-    }
-
-    resultado.textContent = "Buscando CEP...";
+async function buscarCep(evento) {
+    evento.preventDefault();
     
-
-
+    const ceplimpo = deixarSomenteNumeros(inputCep.value);
+    if (ceplimpo.length !== 8) {
+        mostrarStatus ("CEP inválido. Deve conter 8 números.", "danger");  // TODO 8: leia, limpe e valide o CEP. Também limpe a interface antiga.
+        inputCep.focus();
+        return;
+    }
+    mostrarStatus("Buscando CEP..."); // TODO 9: ative o carregamento e informe que a consulta começou.
+    alterarCarregamento(true);
+    try {
+        const resposta = await fetch(`https://viacep.com.br/ws/${ceplimpo}/json/`);
+        if (!resposta.ok) {
+            throw new Error("não foi possível consultar o CEP.");
+        }
+        const dados = await resposta.json();
+        if (dados.erro) {
+            throw new Error("CEP não encontrado.");
+        }
+        preencherResultado(dados);
+        mostrarStatus("CEP encontrado com sucesso!", "success");
+    }   
+    
+    catch (erro) {
+        mostrarStatus( "erro de conexão, verifique sua internet","danger");  // TODO 11: escreva o catch e o finally.
+    }
+    finally {
+        alterarCarregamento(false);
+    } 
+}
 
 inputCep.addEventListener("input", () => {
-    inputCep.value = formatarCep(inputCep.value);  // Formate o valor digitado.
+    inputCep.value = formatarCep(inputCep.value); // TODO 12: crie os eventos input e submit.
+    esconderResultado();
+    mostrarStatus("");  
 });
 
-function validarCep(cep) {
-    if (cep.length !== 8) {
-        mostrarStatus("CEP inválido. Deve conter 8 números.", "danger");
-        esconderResultado();
-        return false;
-    }
-    return true;
-}
-// TODO 12: crie os eventos input e submit.
-// No input, formate o valor digitado. No submit, execute buscarCep.
+formulario.addEventListener("submit", buscarCep);
+
+
+
+
